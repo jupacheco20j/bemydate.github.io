@@ -1,187 +1,96 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para Lucy ❤️</title>
+  <meta charset="UTF-8">
+  <title>💖 Una pregunta importante</title>
 
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    overflow:hidden;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-family:Arial, sans-serif;
-    background:linear-gradient(135deg,#ff9ecf,#ffd6e8);
-}
-
-.card{
-    position:relative;
-    z-index:10;
-    background:white;
-    padding:40px;
-    border-radius:25px;
-    text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,.2);
-    max-width:600px;
-}
-
-h1{
-    color:#ff4081;
-    margin-bottom:20px;
-}
-
-h2{
-    margin-bottom:20px;
-}
-
-p{
-    margin-bottom:25px;
-    font-size:18px;
-}
-
-button{
-    border:none;
-    cursor:pointer;
-    border-radius:12px;
-    font-size:20px;
-    padding:14px 28px;
-    transition:0.3s;
-}
-
-#yes{
-    background:#4CAF50;
-    color:white;
-    font-weight:bold;
-}
-
-#no{
-    background:#ff4d4d;
-    color:white;
-    position:fixed;
-}
-
-#result{
-    margin-top:25px;
-    font-size:24px;
-    color:#ff4081;
-    font-weight:bold;
-}
-
-.heart{
-    position:absolute;
-    bottom:-50px;
-    animation:float linear infinite;
-    color:#ff4d88;
-}
-
-@keyframes float{
-    from{
-        transform:translateY(0) rotate(0deg);
-        opacity:1;
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffe6f0;
+      text-align: center;
+      padding-top: 100px;
     }
-    to{
-        transform:translateY(-110vh) rotate(360deg);
-        opacity:0;
-    }
-}
 
-</style>
+    h1 {
+      color: #ff4d88;
+      font-size: 40px;
+    }
+
+    .buttons {
+      margin-top: 40px;
+    }
+
+    button {
+      font-size: 20px;
+      padding: 12px 25px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #yes {
+      background: #4CAF50;
+      color: white;
+    }
+
+    #no {
+      background: #ff4d4d;
+      color: white;
+    }
+
+    #message {
+      margin-top: 40px;
+      font-size: 24px;
+      color: #333;
+      min-height: 40px;
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="hearts"></div>
+  <h1>¿Quieres salir conmigo? 💕</h1>
 
-<div class="card">
+  <div class="buttons">
+    <button id="yes">Sí 💖</button>
+    <button id="no">No 💔</button>
+  </div>
 
-    <h1>🎂 Hola Lucy ❤️</h1>
+  <div id="message"></div>
 
-    <h2>¿Quieres celebrar tu cumpleaños conmigo?</h2>
+  <script>
+    const messages = [
+      "¿Segura? 😢",
+      "Piénsalo otra vez 🥺",
+      "¿De verdad? 😭",
+      "Vamos, será divertido ❤️",
+      "No me rompas el corazón 💔",
+      "Última oportunidad 😭",
+      "¿Y si dices que sí? 😏",
+      "No puedes escapar 😈"
+    ];
 
-    <p>
-        📅 26 de junio de 2026<br>
-        🕒 3:00 PM<br>
-        📍 Lugar: Por definir
-    </p>
+    let index = 0;
 
-    <button id="yes">Sí ❤️</button>
-    <button id="no">No 😅</button>
+    const noButton = document.getElementById("no");
+    const message = document.getElementById("message");
+    const yesButton = document.getElementById("yes");
 
-    <div id="result"></div>
+    noButton.addEventListener("click", () => {
+      message.textContent = messages[index];
+      index = (index + 1) % messages.length;
 
-</div>
+      // opcional: hacer el botón más "difícil"
+      noButton.style.transform = `scale(${1 + index * 0.05})`;
+    });
 
-<script>
-
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-
-let yesScale = 1;
-
-function moveNoButton(){
-
-    const maxX = window.innerWidth - noBtn.offsetWidth;
-    const maxY = window.innerHeight - noBtn.offsetHeight;
-
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-
-    yesScale += 0.15;
-    yesBtn.style.transform = `scale(${yesScale})`;
-}
-
-moveNoButton();
-
-noBtn.addEventListener("mouseenter", moveNoButton);
-noBtn.addEventListener("mouseover", moveNoButton);
-noBtn.addEventListener("click", moveNoButton);
-
-yesBtn.addEventListener("click", () => {
-
-    document.querySelector(".card").innerHTML = `
-        <h1>🥳 ¡SABÍA QUE DIRÍAS QUE SÍ! ❤️</h1>
-        <br>
-        <p>
-            Ahora solo queda decidir dónde celebrar tu cumpleaños 😍
-        </p>
-        <h2>🎂📅 26 de junio - 3:00 PM</h2>
-    `;
-
-});
-
-function createHeart(){
-
-    const heart = document.createElement("div");
-
-    heart.className = "heart";
-    heart.innerHTML = "❤️";
-
-    heart.style.left = Math.random()*100 + "vw";
-    heart.style.fontSize = (20 + Math.random()*30) + "px";
-    heart.style.animationDuration = (4 + Math.random()*5) + "s";
-
-    document.body.appendChild(heart);
-
-    setTimeout(()=>{
-        heart.remove();
-    },9000);
-}
-
-setInterval(createHeart,250);
-
-</script>
+    yesButton.addEventListener("click", () => {
+      document.body.innerHTML = "<h1>💖 Sabía que dirías que sí 💖</h1>";
+    });
+  </script>
 
 </body>
 </html>
