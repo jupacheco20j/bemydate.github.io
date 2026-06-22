@@ -1,228 +1,302 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>💖 Una pregunta importante</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Salimos? ✨</title>
+    <!-- Incluimos Canvas-Confetti para la explosión del final -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #ffe6f0;
-      text-align: center;
-      height: 100vh;
-      overflow: hidden;
-    }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #121214;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+            overflow: hidden;
+            position: relative;
+        }
 
-    h1 {
-      color: #ff4d88;
-      font-size: 40px;
-      margin-top: 80px;
-      position: relative;
-      z-index: 2;
-    }
+        /* Corazones flotantes de fondo */
+        .bg-heart {
+            position: absolute;
+            color: rgba(255, 75, 110, 0.4);
+            font-size: 20px;
+            animation: floatUp 6s linear infinite;
+            bottom: -50px;
+            z-index: 1;
+            user-select: none;
+            pointer-events: none;
+        }
 
-    .buttons {
-      margin-top: 40px;
-      position: relative;
-      z-index: 2;
-    }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-105vh) translateX(50px) rotate(360deg);
+                opacity: 0;
+            }
+        }
 
-    button {
-      font-size: 20px;
-      padding: 12px 25px;
-      margin: 10px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
+        /* Contenedor Principal */
+        .card {
+            background: #1a1a1e;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            z-index: 10;
+            border: 1px solid #2a2a30;
+            transition: all 0.5s ease;
+        }
 
-    #yes {
-      background: #4CAF50;
-      color: white;
-    }
+        /* Estilo del Gatito */
+        .gif-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
 
-    #no {
-      background: #ff4d4d;
-      color: white;
-      position: absolute;
-      z-index: 999;
-    }
+        .cat-emoji {
+            font-size: 100px;
+            line-height: 120px;
+            animation: bounce 1.5s ease infinite alternate;
+        }
 
-    #message {
-      margin-top: 20px;
-      font-size: 22px;
-      color: #333;
-      position: relative;
-      z-index: 2;
-    }
+        .cat-hearts {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            right: 0;
+            font-size: 24px;
+            animation: pulse 0.8s ease infinite alternate;
+        }
 
-    #result {
-      margin-top: 20px;
-      position: relative;
-      z-index: 2;
-      display: none;
-    }
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
 
-    #result h2 {
-      color: #ff4d88;
-    }
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
 
-    #result p {
-      font-size: 18px;
-    }
+        h1 {
+            font-size: 26px;
+            margin-bottom: 30px;
+            color: #fff;
+            line-height: 1.4;
+        }
 
-    #result img {
-      margin-top: 15px;
-      width: 250px;
-      border-radius: 15px;
-    }
+        /* Botones */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            height: 60px;
+            position: relative;
+        }
 
-    /* ❤️ corazones */
-    .heart {
-      position: absolute;
-      color: #ff4d88;
-      font-size: 20px;
-      animation: floatUp 6s linear forwards;
-      pointer-events: none;
-      z-index: 1;
-    }
+        button {
+            padding: 12px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
 
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
-    }
+        #yesBtn {
+            background: linear-gradient(135deg, #ff4b6e, #ff758c);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 75, 110, 0.4);
+        }
 
-    /* 💥 explosión */
-    .boom-heart {
-      position: fixed;
-      font-size: 24px;
-      color: #ff4d88;
-      pointer-events: none;
-      z-index: 9999;
-      animation: boom 1.2s ease-out forwards;
-    }
+        #yesBtn:active {
+            transform: scale(0.95);
+        }
 
-    @keyframes boom {
-      0% { transform: translate(0,0) scale(1); opacity: 1; }
-      100% { transform: translate(var(--x), var(--y)) scale(2); opacity: 0; }
-    }
-  </style>
+        #noBtn {
+            background-color: #2a2a30;
+            color: #a0a0a5;
+            border: 1px solid #3a3a42;
+            position: absolute;
+            z-index: 999;
+            transition: all 0.1s ease;
+            touch-action: none; /* Evita zoom al tocar en móvil */
+        }
+
+        /* Pantalla de Confirmación */
+        .success-message {
+            display: none;
+        }
+
+        .success-message h2 {
+            color: #ff4b6e;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #222227;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #ff4b6e;
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .info-item {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-item strong {
+            color: #ff758c;
+        }
+    </style>
 </head>
-
 <body>
 
-  <h1>¿Quieres salir conmigo? 💕</h1>
+    <!-- Contenedor de la invitación -->
+    <div class="card" id="mainCard">
+        <!-- Gatito Cute con corazones -->
+        <div class="gif-container">
+            <div class="cat-hearts">💝💖💘</div>
+            <div class="cat-emoji">🐱</div>
+        </div>
 
-  <div class="buttons">
-    <button id="yes">Sí 💖</button>
-    <button id="no">No 💔</button>
-  </div>
+        <!-- Pregunta inicial -->
+        <div id="quizSection">
+            <h1>¡Hola! Te tengo una pregunta importante... <br>¿Saldrías conmigo a una cita? 🗺️✨</h1>
+            <div class="btn-container">
+                <button id="yesBtn" onclick="celebrar()">¡SÍ! 🎉</button>
+                <button id="noBtn" onmouseover="huir(this)" ontouchstart="huir(this)">No 😢</button>
+            </div>
+        </div>
 
-  <div id="message"></div>
+        <!-- Sección oculta del resultado -->
+        <div class="success-message" id="successSection">
+            <h2>¡Siií! Sabía que dirías que sí 🥰 🎉</h2>
+            <p>Preparé los detalles para que no tengas que preocuparte por nada:</p>
+            
+            <div class="info-box">
+                <div class="info-item">📍 <strong>Punto de recogida:</strong> Torre Millennium</div>
+                <div class="info-item">🕛 <strong>Hora:</strong> Al mediodía (12:00 PM)</div>
+            </div>
+        </div>
+    </div>
 
-  <div id="result">
-    <h2>💖 ¡Sabía que dirías que sí! 💖</h2>
-    <p><b>📅 Fecha:</b> 26/06/2026</p>
-    <p><b>🕒 Hora:</b> 3:00 PM</p>
-    <p><b>📍 Punto de recogida:</b> Edificio Millenium</p>
+    <script>
+        // 1. Generador de corazones flotantes continuos en el fondo
+        function crearCorazonesDeFondo() {
+            const corazones = ['❤️', '💖', '💝', '💕', '💘'];
+            setInterval(() => {
+                const corazon = document.createElement('div');
+                corazon.classList.add('bg-heart');
+                corazon.innerText = corazones[Math.floor(Math.random() * corazones.length)];
+                
+                // Posición horizontal aleatoria y tamaño aleatorio
+                corazon.style.left = Math.random() * 100 + 'vw';
+                corazon.style.fontSize = Math.random() * (30 - 15) + 15 + 'px';
+                
+                // Velocidad de animación aleatoria
+                corazon.style.animationDuration = Math.random() * (7 - 4) + 4 + 's';
+                
+                document.body.appendChild(corazon);
+                
+                // Eliminar el elemento después de que termine la animación
+                setTimeout(() => {
+                    corazon.remove();
+                }, 7000);
+            }, 300); // Aparece un corazón cada 300ms
+        }
 
-    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="gatitos">
-  </div>
+        // Iniciar la lluvia de fondo inmediatamente al cargar la página
+        crearCorazonesDeFondo();
 
-  <script>
-    const messages = [
-      "¿Segura? 😢",
-      "Piénsalo otra vez 🥺",
-      "¿De verdad? 😭",
-      "Vamos, será divertido ❤️",
-      "No me rompas el corazón 💔",
-      "Última oportunidad 😭",
-      "¿Y si dices que sí? 😏",
-      "No puedes escapar 😈"
-    ];
+        // 2. Función para que el botón "No" sea imposible de presionar
+        function huir(boton) {
+            // Calculamos límites seguros para que el botón no se salga completamente de la pantalla visible
+            const padding = 20;
+            const maxX = window.innerWidth - boton.offsetWidth - padding;
+            const maxY = window.innerHeight - boton.offsetHeight - padding;
 
-    let index = 0;
+            // Generar coordenadas aleatorias
+            let randomX = Math.floor(Math.random() * (maxX - padding)) + padding;
+            let randomY = Math.floor(Math.random() * (maxY - padding)) + padding;
 
-    const noButton = document.getElementById("no");
-    const message = document.getElementById("message");
-    const yesButton = document.getElementById("yes");
-    const result = document.getElementById("result");
+            // Aplicar la nueva posición absoluta
+            boton.style.position = 'fixed';
+            boton.style.left = randomX + 'px';
+            boton.style.top = randomY + 'px';
+        }
 
-    function showMessage() {
-      message.textContent = messages[index];
-      index = (index + 1) % messages.length;
-    }
+        // 3. Función al dar clic en "SÍ" (Explosión y Mensaje)
+        function celebrar() {
+            // Ocultamos la pregunta y mostramos la dirección
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'block';
+            
+            // Cambiamos el gatito a un modo aún más feliz
+            document.querySelector('.cat-emoji').innerText = '😸';
+            document.querySelector('.cat-hearts').innerText = '🎉✨🥳';
 
-    function moveButton() {
-      const padding = 80;
-      const x = Math.random() * (window.innerWidth - padding);
-      const y = Math.random() * (window.innerHeight - padding);
+            // Configuración de la explosión masiva con canvas-confetti
+            const duration = 4 * 1000;
+            const end = Date.now() + duration;
 
-      noButton.style.left = x + "px";
-      noButton.style.top = y + "px";
-    }
+            // Mezcla de corazones y confeti de fiesta
+            (function frame() {
+                // Confeti de colores de fiesta
+                confetti({
+                    particleCount: 4,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0, y: 0.8 }
+                });
+                confetti({
+                    particleCount: 4,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1, y: 0.8 }
+                });
 
-    // ❌ botón NO imposible
-    ["mouseenter","mouseover","click","touchstart","pointerdown"].forEach(evt => {
-      noButton.addEventListener(evt, (e) => {
-        e.preventDefault();
-        showMessage();
-        moveButton();
-      });
-    });
+                // Lanzamiento desde el centro para simular corazones flotantes explosivos
+                confetti({
+                    particleCount: 2,
+                    spread: 80,
+                    origin: { x: 0.5, y: 0.6 },
+                    colors: ['#ff4b6e', '#ff758c', '#ff003c']
+                });
 
-    // ❤️ corazones flotando
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.classList.add("heart");
-      heart.innerHTML = "❤️";
-
-      heart.style.left = Math.random() * window.innerWidth + "px";
-      heart.style.top = window.innerHeight + "px";
-      heart.style.fontSize = (15 + Math.random() * 25) + "px";
-      heart.style.animationDuration = (4 + Math.random() * 3) + "s";
-
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 7000);
-    }
-
-    setInterval(createHeart, 150);
-
-    // 💥 explosión de corazones
-    function heartExplosion() {
-      for (let i = 0; i < 60; i++) {
-        const heart = document.createElement("div");
-        heart.classList.add("boom-heart");
-        heart.innerHTML = "❤️";
-
-        const x = (Math.random() - 0.5) * 800 + "px";
-        const y = (Math.random() - 0.5) * 800 + "px";
-
-        heart.style.left = "50%";
-        heart.style.top = "50%";
-        heart.style.setProperty("--x", x);
-        heart.style.setProperty("--y", y);
-
-        document.body.appendChild(heart);
-
-        setTimeout(() => heart.remove(), 1200);
-      }
-    }
-
-    // 💖 botón sí
-    yesButton.addEventListener("click", () => {
-      heartExplosion();
-
-      setTimeout(() => {
-        document.querySelector(".buttons").style.display = "none";
-        document.getElementById("message").style.display = "none";
-        document.getElementById("result").style.display = "block";
-      }, 700);
-    });
-
-    moveButton();
-  </script>
-
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+    </script>
 </body>
 </html>
