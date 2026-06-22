@@ -58,7 +58,7 @@
       z-index: 2;
     }
 
-    /* ❤️ corazones */
+    /* ❤️ corazones flotando */
     .heart {
       position: absolute;
       color: #ff4d88;
@@ -75,6 +75,27 @@
       }
       100% {
         transform: translateY(-110vh) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    /* 💥 explosión */
+    .boom-heart {
+      position: fixed;
+      font-size: 24px;
+      color: #ff4d88;
+      pointer-events: none;
+      z-index: 9999;
+      animation: boom 1.2s ease-out forwards;
+    }
+
+    @keyframes boom {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) scale(2);
         opacity: 0;
       }
     }
@@ -124,41 +145,16 @@
       noButton.style.top = y + "px";
     }
 
-    // ❌ imposible tocar "No"
-    noButton.addEventListener("mouseenter", () => {
-      showMessage();
-      moveButton();
+    // ❌ botón NO imposible
+    ["mouseenter", "mouseover", "click", "touchstart", "pointerdown"].forEach(evt => {
+      noButton.addEventListener(evt, (e) => {
+        e.preventDefault();
+        showMessage();
+        moveButton();
+      });
     });
 
-    noButton.addEventListener("mouseover", () => {
-      showMessage();
-      moveButton();
-    });
-
-    noButton.addEventListener("click", (e) => {
-      e.preventDefault();
-      showMessage();
-      moveButton();
-    });
-
-    noButton.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      showMessage();
-      moveButton();
-    });
-
-    noButton.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      showMessage();
-      moveButton();
-    });
-
-    // 💖 botón sí
-    yesButton.addEventListener("click", () => {
-      document.body.innerHTML = "<h1>💖 Sabía que dirías que sí 💖</h1>";
-    });
-
-    // ❤️ corazones infinitos desde el inicio
+    // ❤️ corazones flotando constantes
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("heart");
@@ -171,14 +167,42 @@
 
       document.body.appendChild(heart);
 
-      setTimeout(() => {
-        heart.remove();
-      }, 7000);
+      setTimeout(() => heart.remove(), 7000);
     }
 
     setInterval(createHeart, 150);
 
-    // posición inicial del botón
+    // 💥 EXPLOSIÓN DE CORAZONES
+    function heartExplosion() {
+      for (let i = 0; i < 60; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("boom-heart");
+        heart.innerHTML = "❤️";
+
+        const x = (Math.random() - 0.5) * 800 + "px";
+        const y = (Math.random() - 0.5) * 800 + "px";
+
+        heart.style.left = "50%";
+        heart.style.top = "50%";
+        heart.style.setProperty("--x", x);
+        heart.style.setProperty("--y", y);
+
+        heart.style.fontSize = (15 + Math.random() * 25) + "px";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 1200);
+      }
+    }
+
+    // 💖 botón SÍ
+    yesButton.addEventListener("click", () => {
+      heartExplosion();
+      setTimeout(() => {
+        document.body.innerHTML = "<h1>💖 Sabía que dirías que sí 💖</h1>";
+      }, 800);
+    });
+
     moveButton();
   </script>
 
