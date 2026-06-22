@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¿Salimos? ✨</title>
-    <!-- Incluimos Canvas-Confetti para la explosión del final -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * {
@@ -21,8 +20,9 @@
             background-color: #121214;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #ffffff;
-            overflow: hidden;
+            overflow-x: hidden; /* Cambiado a overflow-x para permitir scroll si las fotos son grandes en pantallas chicas */
             position: relative;
+            padding: 20px;
         }
 
         /* Corazones flotantes de fondo */
@@ -50,7 +50,17 @@
             }
         }
 
-        /* Contenedor Principal */
+        /* Contenedor Principal Ajustado para las Fotos Laterales */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            z-index: 10;
+        }
+
         .card {
             background: #1a1a1e;
             padding: 40px 30px;
@@ -58,10 +68,27 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
             max-width: 450px;
-            width: 90%;
-            z-index: 10;
+            width: 100%;
             border: 1px solid #2a2a30;
             transition: all 0.3s ease;
+            flex-shrink: 0; /* Evita que la tarjeta se encoja */
+        }
+
+        /* Estilo de las fotos de GitHub */
+        .side-photo {
+            width: 250px;
+            height: 350px;
+            object-fit: cover; /* Recorta la imagen para que llene el contenedor perfectamente */
+            border-radius: 15px;
+            border: 3px solid #ff4b6e;
+            box-shadow: 0 8px 25px rgba(255, 75, 110, 0.3);
+            display: none; /* Ocultas al principio */
+            animation: fadeIn 1s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         /* Estilo del Gatito */
@@ -73,7 +100,8 @@
         }
 
         .cat-emoji {
-            top:40px;
+            position: absolute;
+            top: 40px;
             font-size: 100px;
             line-height: 120px;
             animation: bounce 1.5s ease infinite alternate;
@@ -142,8 +170,8 @@
             position: relative;
             z-index: 999;
             transition: all 0.1s ease-out;
-            touch-action: none; /* Evita gestos raros en móviles */
-            white-space: nowrap; /* Evita que el texto largo se rompa en dos líneas */
+            touch-action: none;
+            white-space: nowrap;
         }
 
         /* Pantalla de Confirmación */
@@ -178,38 +206,53 @@
         .info-item strong {
             color: #ff758c;
         }
+
+        /* DISEÑO RESPONSIVO: Si la pantalla es pequeña (celulares), pone las fotos abajo */
+        @media (max-width: 850px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .side-photo {
+                width: 90%;
+                max-width: 300px;
+                height: 300px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Contenedor de la invitación -->
-    <div class="card" id="mainCard">
-        <!-- Gatito Cute con corazones -->
-        <div class="gif-container">
-            <div class="cat-hearts">💝💖💘</div>
-            <div class="cat-emoji">🐱</div>
-        </div>
+    <div class="main-container">
+        
+<img id="leftPhoto" class="side-photo" src="Bello.jpg" alt="Foto Izquierda">
 
-        <!-- Sección de la pregunta -->
-        <div id="quizSection">
-            <h1>¡Hola mi amor! Te tengo una pregunta importante... <br>¿Saldrías conmigo a una cita para tu cumpleaños? 🗺️✨</h1>
-            <div class="btn-container">
-                <button id="yesBtn" onclick="celebrar()">¡SÍ! 🎉</button>
-                <button id="noBtn" onmouseover="huir(this)" ontouchstart="huir(this)" onclick="huir(this)">No 😢</button>
+        <div class="card" id="mainCard">
+            <div class="gif-container">
+                <div class="cat-hearts">💝💖💘</div>
+                <div class="cat-emoji">🐱</div>
+            </div>
+
+            <div id="quizSection">
+                <h1>¡Hola mi amor! Te tengo una pregunta importante... <br>¿Saldrías conmigo a una cita para tu cumpleaños? 🗺️✨</h1>
+                <div class="btn-container">
+                    <button id="yesBtn" onclick="celebrar()">¡SÍ! 🎉</button>
+                    <button id="noBtn" onmouseover="huir(this)" ontouchstart="huir(this)" onclick="huir(this)">No 😢</button>
+                </div>
+            </div>
+
+            <div class="success-message" id="successSection">
+                <h2>¡Siií! Sabía que dirías que sí 🥰 🎉</h2>
+                <p>Preparé los detalles para que no tengas que preocuparte por nada:</p>
+                
+                <div class="info-box">
+                    <div class="info-item">📍 <strong>Punto de recogida:</strong> Torre Millennium</div>
+                    <div class="info-item">🕛 <strong>Hora:</strong> Al mediodía (12:00 PM)</div>
+                    <div class="info-item">🕛 <strong>Hora retorno:</strong> Indefinida </div>
+                </div>
             </div>
         </div>
 
-        <!-- Sección oculta del resultado -->
-        <div class="success-message" id="successSection">
-            <h2>¡Siií! Sabía que dirías que sí 🥰 🎉</h2>
-            <p>Preparé los detalles para que no tengas que preocuparte por nada:</p>
-            
-            <div class="info-box">
-                <div class="info-item">📍 <strong>Punto de recogida:</strong> Torre Millennium</div>
-                <div class="info-item">🕛 <strong>Hora:</strong> Al mediodía (12:00 PM)</div>
-                <div class="info-item">🕛 <strong>Hora retorno:</strong> Indefinida </div>
-            </div>
-        </div>
+<img id="rightPhoto" class="side-photo" src="Limon.jpg" alt="Foto Derecha">
     </div>
 
     <script>
@@ -253,30 +296,24 @@
 
         // 2. Función INFINITA para que el botón "No" huya y cambie de texto
         function huir(boton) {
-            // Cambiar a posicionamiento fijo desde el primer instante que se intente tocar
             boton.style.position = 'fixed';
 
-            // Definimos límites para que no se salga de los bordes de la pantalla
             const padding = 30;
             const maxX = window.innerWidth - boton.offsetWidth - padding;
             const maxY = window.innerHeight - boton.offsetHeight - padding;
 
-            // Coordenadas totalmente aleatorias dentro de la pantalla
             let randomX = Math.floor(Math.random() * (maxX - padding)) + padding;
             let randomY = Math.floor(Math.random() * (maxY - padding)) + padding;
 
-            // Asegurar valores mínimos seguros
             randomX = Math.max(padding, randomX);
             randomY = Math.max(padding, randomY);
 
             boton.style.left = randomX + 'px';
             boton.style.top = randomY + 'px';
 
-            // Cambiar dinámicamente el mensaje divertido
             contadorFrases = (contadorFrases + 1) % frasesDivertidas.length;
             boton.innerText = frasesDivertidas[contadorFrases];
             
-            // Cambiar temporalmente el emoji del gatito para reaccionar al rechazo
             document.querySelector('.cat-emoji').innerText = '😿';
             setTimeout(() => {
                 if(document.getElementById('quizSection').style.display !== 'none') {
@@ -285,17 +322,22 @@
             }, 800);
         }
 
-        // 3. Función al dar clic en "SÍ" (Explosión y Mensaje Fijo)
+        // 3. Función al dar clic en "SÍ" (Explosión, Mensaje Fijo y Muestra de Fotos)
         function celebrar() {
             // Ocultamos la sección de juego y mostramos la tarjeta final fija
             document.getElementById('quizSection').style.display = 'none';
             document.getElementById('successSection').style.display = 'block';
             
-            // Restauramos el diseño del contenedor eliminando cualquier desborde
+            // HACEMOS VISIBLES LAS FOTOS
+            document.getElementById('leftPhoto').style.display = 'block';
+            document.getElementById('rightPhoto').style.display = 'block';
+            
+            // Ocultamos permanentemente el botón "No" que quedó flotando por ahí
+            document.getElementById('noBtn').style.display = 'none';
+
             const card = document.getElementById('mainCard');
             card.style.transform = 'none';
 
-            // Cambiamos el gatito a modo mega feliz
             document.querySelector('.cat-emoji').innerText = '😸';
             document.querySelector('.cat-hearts').innerText = '🎉✨🥳';
 
@@ -304,7 +346,6 @@
             const end = Date.now() + duration;
 
             (function frame() {
-                // Confeti clásico en las esquinas
                 confetti({
                     particleCount: 4,
                     angle: 60,
@@ -318,7 +359,6 @@
                     origin: { x: 1, y: 0.8 }
                 });
 
-                // Ráfaga central de corazones rojos y rosas
                 confetti({
                     particleCount: 2,
                     spread: 80,
