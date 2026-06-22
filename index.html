@@ -61,7 +61,7 @@
             width: 90%;
             z-index: 10;
             border: 1px solid #2a2a30;
-            transition: all 0.5s ease;
+            transition: all 0.3s ease;
         }
 
         /* Estilo del Gatito */
@@ -110,7 +110,7 @@
             justify-content: center;
             align-items: center;
             gap: 20px;
-            height: 60px;
+            height: 70px;
             position: relative;
         }
 
@@ -136,12 +136,13 @@
 
         #noBtn {
             background-color: #2a2a30;
-            color: #a0a0a5;
-            border: 1px solid #3a3a42;
-            position: absolute;
+            color: #ffffff;
+            border: 1px solid #ff4b6e;
+            position: relative;
             z-index: 999;
-            transition: all 0.1s ease;
-            touch-action: none; /* Evita zoom al tocar en móvil */
+            transition: all 0.1s ease-out;
+            touch-action: none; /* Evita gestos raros en móviles */
+            white-space: nowrap; /* Evita que el texto largo se rompa en dos líneas */
         }
 
         /* Pantalla de Confirmación */
@@ -188,12 +189,12 @@
             <div class="cat-emoji">🐱</div>
         </div>
 
-        <!-- Pregunta inicial -->
+        <!-- Sección de la pregunta -->
         <div id="quizSection">
             <h1>¡Hola! Te tengo una pregunta importante... <br>¿Saldrías conmigo a una cita? 🗺️✨</h1>
             <div class="btn-container">
                 <button id="yesBtn" onclick="celebrar()">¡SÍ! 🎉</button>
-                <button id="noBtn" onmouseover="huir(this)" ontouchstart="huir(this)">No 😢</button>
+                <button id="noBtn" onmouseover="huir(this)" ontouchstart="huir(this)" onclick="huir(this)">No 😢</button>
             </div>
         </div>
 
@@ -210,6 +211,22 @@
     </div>
 
     <script>
+        // Lista de frases divertidas para el botón NO
+        const frasesDivertidas = [
+            "No 😢",
+            "¿Estás segura? 🤔",
+            "Piénsalo otra vez... 👀",
+            "Te va a encantar, en serio 🍕",
+            "Error: Opción inválida ❌",
+            "¡El botón SÍ está al lado! 👉",
+            "Dale al SÍ, no seas así... 🥺",
+            "Un gatito llorará si dices que no 🐱💧",
+            "¡Demasiado lenta/o! ⚡",
+            "Me rindo... es broma, ¡NUNCA! 😂"
+        ];
+        
+        let contadorFrases = 0;
+
         // 1. Generador de corazones flotantes continuos en el fondo
         function crearCorazonesDeFondo() {
             const corazones = ['❤️', '💖', '💝', '💕', '💘'];
@@ -218,49 +235,65 @@
                 corazon.classList.add('bg-heart');
                 corazon.innerText = corazones[Math.floor(Math.random() * corazones.length)];
                 
-                // Posición horizontal aleatoria y tamaño aleatorio
                 corazon.style.left = Math.random() * 100 + 'vw';
                 corazon.style.fontSize = Math.random() * (30 - 15) + 15 + 'px';
-                
-                // Velocidad de animación aleatoria
                 corazon.style.animationDuration = Math.random() * (7 - 4) + 4 + 's';
                 
                 document.body.appendChild(corazon);
                 
-                // Eliminar el elemento después de que termine la animación
                 setTimeout(() => {
                     corazon.remove();
                 }, 7000);
-            }, 300); // Aparece un corazón cada 300ms
+            }, 300);
         }
 
-        // Iniciar la lluvia de fondo inmediatamente al cargar la página
         crearCorazonesDeFondo();
 
-        // 2. Función para que el botón "No" sea imposible de presionar
+        // 2. Función INFINITA para que el botón "No" huya y cambie de texto
         function huir(boton) {
-            // Calculamos límites seguros para que el botón no se salga completamente de la pantalla visible
-            const padding = 20;
+            // Cambiar a posicionamiento fijo desde el primer instante que se intente tocar
+            boton.style.position = 'fixed';
+
+            // Definimos límites para que no se salga de los bordes de la pantalla
+            const padding = 30;
             const maxX = window.innerWidth - boton.offsetWidth - padding;
             const maxY = window.innerHeight - boton.offsetHeight - padding;
 
-            // Generar coordenadas aleatorias
+            // Coordenadas totalmente aleatorias dentro de la pantalla
             let randomX = Math.floor(Math.random() * (maxX - padding)) + padding;
             let randomY = Math.floor(Math.random() * (maxY - padding)) + padding;
 
-            // Aplicar la nueva posición absoluta
-            boton.style.position = 'fixed';
+            // Asegurar valores mínimos seguros
+            randomX = Math.max(padding, randomX);
+            randomY = Math.max(padding, randomY);
+
             boton.style.left = randomX + 'px';
             boton.style.top = randomY + 'px';
+
+            // Cambiar dinámicamente el mensaje divertido
+            contadorFrases = (contadorFrases + 1) % frasesDivertidas.length;
+            boton.innerText = frasesDivertidas[contadorFrases];
+            
+            // Cambiar temporalmente el emoji del gatito para reaccionar al rechazo
+            document.querySelector('.cat-emoji').innerText = '😿';
+            setTimeout(() => {
+                if(document.getElementById('quizSection').style.display !== 'none') {
+                    document.querySelector('.cat-emoji').innerText = '🐱';
+                }
+            }, 800);
         }
 
-        // 3. Función al dar clic en "SÍ" (Explosión y Mensaje)
+        // 3. Función al dar clic en "SÍ" (Explosión y Mensaje Fijo)
         function celebrar() {
-            // Ocultamos la pregunta y mostramos la dirección
+            // Ocultamos la sección de juego y mostramos la tarjeta final fija
             document.getElementById('quizSection').style.display = 'none';
             document.getElementById('successSection').style.display = 'block';
             
-            // Cambiamos el gatito a un modo aún más feliz
+            // Restauramos el diseño del contenedor eliminando cualquier desborde
+            const card = document.getElementById('mainCard');
+            card.style.transform = 'none';
+
+            // Cambiamos el gatito a modo mega feliz
             document.querySelector('.cat-emoji').innerText = '😸';
             document.querySelector('.cat-hearts').innerText = '🎉✨🥳';
 
@@ -268,9 +301,8 @@
             const duration = 4 * 1000;
             const end = Date.now() + duration;
 
-            // Mezcla de corazones y confeti de fiesta
             (function frame() {
-                // Confeti de colores de fiesta
+                // Confeti clásico en las esquinas
                 confetti({
                     particleCount: 4,
                     angle: 60,
@@ -284,7 +316,7 @@
                     origin: { x: 1, y: 0.8 }
                 });
 
-                // Lanzamiento desde el centro para simular corazones flotantes explosivos
+                // Ráfaga central de corazones rojos y rosas
                 confetti({
                     particleCount: 2,
                     spread: 80,
