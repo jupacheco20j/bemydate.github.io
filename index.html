@@ -50,15 +50,35 @@
     }
 
     #message {
-      margin-top: 30px;
-      font-size: 24px;
+      margin-top: 20px;
+      font-size: 22px;
       color: #333;
-      min-height: 40px;
       position: relative;
       z-index: 2;
     }
 
-    /* ❤️ corazones flotando */
+    #result {
+      margin-top: 20px;
+      position: relative;
+      z-index: 2;
+      display: none;
+    }
+
+    #result h2 {
+      color: #ff4d88;
+    }
+
+    #result p {
+      font-size: 18px;
+    }
+
+    #result img {
+      margin-top: 15px;
+      width: 250px;
+      border-radius: 15px;
+    }
+
+    /* ❤️ corazones */
     .heart {
       position: absolute;
       color: #ff4d88;
@@ -69,14 +89,8 @@
     }
 
     @keyframes floatUp {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-110vh) scale(1.5);
-        opacity: 0;
-      }
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
     }
 
     /* 💥 explosión */
@@ -90,14 +104,8 @@
     }
 
     @keyframes boom {
-      0% {
-        transform: translate(0, 0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(var(--x), var(--y)) scale(2);
-        opacity: 0;
-      }
+      0% { transform: translate(0,0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--x), var(--y)) scale(2); opacity: 0; }
     }
   </style>
 </head>
@@ -112,6 +120,15 @@
   </div>
 
   <div id="message"></div>
+
+  <div id="result">
+    <h2>💖 ¡Sabía que dirías que sí! 💖</h2>
+    <p><b>📅 Fecha:</b> 26/06/2026</p>
+    <p><b>🕒 Hora:</b> 3:00 PM</p>
+    <p><b>📍 Punto de recogida:</b> Edificio Millenium</p>
+
+    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="gatitos">
+  </div>
 
   <script>
     const messages = [
@@ -130,6 +147,7 @@
     const noButton = document.getElementById("no");
     const message = document.getElementById("message");
     const yesButton = document.getElementById("yes");
+    const result = document.getElementById("result");
 
     function showMessage() {
       message.textContent = messages[index];
@@ -146,7 +164,7 @@
     }
 
     // ❌ botón NO imposible
-    ["mouseenter", "mouseover", "click", "touchstart", "pointerdown"].forEach(evt => {
+    ["mouseenter","mouseover","click","touchstart","pointerdown"].forEach(evt => {
       noButton.addEventListener(evt, (e) => {
         e.preventDefault();
         showMessage();
@@ -154,7 +172,7 @@
       });
     });
 
-    // ❤️ corazones flotando constantes
+    // ❤️ corazones flotando
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("heart");
@@ -166,13 +184,12 @@
       heart.style.animationDuration = (4 + Math.random() * 3) + "s";
 
       document.body.appendChild(heart);
-
       setTimeout(() => heart.remove(), 7000);
     }
 
     setInterval(createHeart, 150);
 
-    // 💥 EXPLOSIÓN DE CORAZONES
+    // 💥 explosión de corazones
     function heartExplosion() {
       for (let i = 0; i < 60; i++) {
         const heart = document.createElement("div");
@@ -187,20 +204,21 @@
         heart.style.setProperty("--x", x);
         heart.style.setProperty("--y", y);
 
-        heart.style.fontSize = (15 + Math.random() * 25) + "px";
-
         document.body.appendChild(heart);
 
         setTimeout(() => heart.remove(), 1200);
       }
     }
 
-    // 💖 botón SÍ
+    // 💖 botón sí
     yesButton.addEventListener("click", () => {
       heartExplosion();
+
       setTimeout(() => {
-        document.body.innerHTML = "<h1>💖 Sabía que dirías que sí 💖</h1>";
-      }, 800);
+        document.querySelector(".buttons").style.display = "none";
+        document.getElementById("message").style.display = "none";
+        document.getElementById("result").style.display = "block";
+      }, 700);
     });
 
     moveButton();
