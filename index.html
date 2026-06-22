@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¿Salimos? ✨</title>
-    <!-- Incluimos Canvas-Confetti para la explosión del final -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * {
@@ -64,7 +63,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Estilo del Gatito */
+        /* Estilo del Perrito */
         .gif-container {
             width: 150px;
             height: 150px;
@@ -72,19 +71,22 @@
             position: relative;
         }
 
-        .cat-emoji {
+        .dog-emoji {
             font-size: 100px;
             line-height: 120px;
             animation: bounce 1.5s ease infinite alternate;
+            position: relative;
+            z-index: 2;
         }
 
-        .cat-hearts {
+        .dog-hearts {
             position: absolute;
             top: 10px;
             left: 0;
             right: 0;
             font-size: 24px;
             animation: pulse 0.8s ease infinite alternate;
+            z-index: 5; /* Asegura que no lo tape la cabeza del perro */
         }
 
         @keyframes bounce {
@@ -181,15 +183,12 @@
 </head>
 <body>
 
-    <!-- Contenedor de la invitación -->
     <div class="card" id="mainCard">
-        <!-- Gatito Cute con corazones -->
         <div class="gif-container">
-            <div class="cat-hearts">💝💖💘</div>
-            <div class="cat-emoji">🐱</div>
+            <div class="dog-hearts">💝💖💘</div>
+            <div class="dog-emoji">🐶</div>
         </div>
 
-        <!-- Sección de la pregunta -->
         <div id="quizSection">
             <h1>¡Hola mi amor! Te tengo una pregunta importante... <br>¿Saldrías conmigo a una cita para tu cumple? 🗺️✨</h1>
             <div class="btn-container">
@@ -198,7 +197,6 @@
             </div>
         </div>
 
-        <!-- Sección oculta del resultado -->
         <div class="success-message" id="successSection">
             <h2>¡Siií! Sabía que dirías que sí 🥰 🎉</h2>
             <p>Preparé los detalles para que no tengas que preocuparte por nada:</p>
@@ -206,7 +204,7 @@
             <div class="info-box">
                 <div class="info-item">📍 <strong>Punto de recogida:</strong> Torre Millennium</div>
                 <div class="info-item">🕛 <strong>Hora:</strong> Al mediodía (12:00 PM)</div>
-                <div class="info-item">🕛 <strong>Hora de regreso:</strong> !Indefinida! </div>
+                <div class="info-item">🕛 <strong>Hora de regreso:</strong> Indefinida! </div>
             </div>
         </div>
     </div>
@@ -221,7 +219,7 @@
             "Error: Opción inválida ❌",
             "¡El botón SÍ está al lado! 👉",
             "Dale al SÍ, no seas así... 🥺",
-            "Un gatito llorará si dices que no 🐱💧",
+            "Un perrito llorará si dices que no 🐶💧",
             "¡Demasiado lenta/o! ⚡",
             "Me rindo... es broma, ¡NUNCA! 😂"
         ];
@@ -275,11 +273,11 @@
             contadorFrases = (contadorFrases + 1) % frasesDivertidas.length;
             boton.innerText = frasesDivertidas[contadorFrases];
             
-            // Cambiar temporalmente el emoji del gatito para reaccionar al rechazo
-            document.querySelector('.cat-emoji').innerText = '😿';
+            // Cambiar temporalmente el emoji del perrito para reaccionar al rechazo
+            document.querySelector('.dog-emoji').innerText = '🐶💧';
             setTimeout(() => {
                 if(document.getElementById('quizSection').style.display !== 'none') {
-                    document.querySelector('.cat-emoji').innerText = '🐱';
+                    document.querySelector('.dog-emoji').innerText = '🐶';
                 }
             }, 800);
         }
@@ -294,9 +292,9 @@
             const card = document.getElementById('mainCard');
             card.style.transform = 'none';
 
-            // Cambiamos el gatito a modo mega feliz
-            document.querySelector('.cat-emoji').innerText = '😸';
-            document.querySelector('.cat-hearts').innerText = '🎉✨🥳';
+            // Cambiamos el perrito a modo mega feliz
+            document.querySelector('.dog-emoji').innerText = '🐕';
+            document.querySelector('.dog-hearts').innerText = '🎉✨🥳';
 
             // Configuración de la explosión masiva con canvas-confetti
             const duration = 4 * 1000;
