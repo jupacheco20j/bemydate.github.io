@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¿Salimos? ✨</title>
-    <!-- Incluimos Canvas-Confetti para la explosión del final -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * {
@@ -64,7 +63,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Estilo del Gatito */
+        /* Estilo del Perrito */
         .gif-container {
             width: 150px;
             height: 150px;
@@ -72,13 +71,13 @@
             position: relative;
         }
 
-        .cat-emoji {
+        .dog-emoji {
             font-size: 100px;
             line-height: 120px;
             animation: bounce 1.5s ease infinite alternate;
         }
 
-        .cat-hearts {
+        .dog-hearts {
             position: absolute;
             top: 10px;
             left: 0;
@@ -181,15 +180,12 @@
 </head>
 <body>
 
-    <!-- Contenedor de la invitación -->
     <div class="card" id="mainCard">
-        <!-- Gatito Cute con corazones -->
         <div class="gif-container">
-            <div class="cat-hearts">💝💖💘</div>
-            <div class="cat-emoji">🐱</div>
+            <div class="dog-hearts">💝💖💘</div>
+            <div class="dog-emoji"><code>🐶</code></div>
         </div>
 
-        <!-- Sección de la pregunta -->
         <div id="quizSection">
             <h1>¡Hola! Te tengo una pregunta importante... <br>¿Saldrías conmigo a una cita? 🗺️✨</h1>
             <div class="btn-container">
@@ -198,7 +194,6 @@
             </div>
         </div>
 
-        <!-- Sección oculta del resultado -->
         <div class="success-message" id="successSection">
             <h2>¡Siií! Sabía que dirías que sí 🥰 🎉</h2>
             <p>Preparé los detalles para que no tengas que preocuparte por nada:</p>
@@ -220,7 +215,7 @@
             "Error: Opción inválida ❌",
             "¡El botón SÍ está al lado! 👉",
             "Dale al SÍ, no seas así... 🥺",
-            "Un gatito llorará si dices que no 🐱💧",
+            "Un perrito llorará si dices que no 🐶💧",
             "¡Demasiado lenta/o! ⚡",
             "Me rindo... es broma, ¡NUNCA! 😂"
         ];
@@ -251,58 +246,49 @@
 
         // 2. Función INFINITA para que el botón "No" huya y cambie de texto
         function huir(boton) {
-            // Cambiar a posicionamiento fijo desde el primer instante que se intente tocar
             boton.style.position = 'fixed';
 
-            // Definimos límites para que no se salga de los bordes de la pantalla
             const padding = 30;
             const maxX = window.innerWidth - boton.offsetWidth - padding;
             const maxY = window.innerHeight - boton.offsetHeight - padding;
 
-            // Coordenadas totalmente aleatorias dentro de la pantalla
             let randomX = Math.floor(Math.random() * (maxX - padding)) + padding;
             let randomY = Math.floor(Math.random() * (maxY - padding)) + padding;
 
-            // Asegurar valores mínimos seguros
             randomX = Math.max(padding, randomX);
             randomY = Math.max(padding, randomY);
 
             boton.style.left = randomX + 'px';
             boton.style.top = randomY + 'px';
 
-            // Cambiar dinámicamente el mensaje divertido
             contadorFrases = (contadorFrases + 1) % frasesDivertidas.length;
             boton.innerText = frasesDivertidas[contadorFrases];
             
-            // Cambiar temporalmente el emoji del gatito para reaccionar al rechazo
-            document.querySelector('.cat-emoji').innerText = '😿';
+            // Cambiar temporalmente el emoji del perrito para reaccionar al rechazo
+            document.querySelector('.dog-emoji').innerText = '🐶💧';
             setTimeout(() => {
                 if(document.getElementById('quizSection').style.display !== 'none') {
-                    document.querySelector('.cat-emoji').innerText = '🐱';
+                    document.querySelector('.dog-emoji').innerText = '🐶';
                 }
             }, 800);
         }
 
         // 3. Función al dar clic en "SÍ" (Explosión y Mensaje Fijo)
         function celebrar() {
-            // Ocultamos la sección de juego y mostramos la tarjeta final fija
             document.getElementById('quizSection').style.display = 'none';
             document.getElementById('successSection').style.display = 'block';
             
-            // Restauramos el diseño del contenedor eliminando cualquier desborde
             const card = document.getElementById('mainCard');
             card.style.transform = 'none';
 
-            // Cambiamos el gatito a modo mega feliz
-            document.querySelector('.cat-emoji').innerText = '😸';
-            document.querySelector('.cat-hearts').innerText = '🎉✨🥳';
+            // Cambiamos el perrito a modo mega feliz
+            document.querySelector('.dog-emoji').innerText = '🐕';
+            document.querySelector('.dog-hearts').innerText = '🎉✨🥳';
 
-            // Configuración de la explosión masiva con canvas-confetti
             const duration = 4 * 1000;
             const end = Date.now() + duration;
 
             (function frame() {
-                // Confeti clásico en las esquinas
                 confetti({
                     particleCount: 4,
                     angle: 60,
@@ -316,7 +302,6 @@
                     origin: { x: 1, y: 0.8 }
                 });
 
-                // Ráfaga central de corazones rojos y rosas
                 confetti({
                     particleCount: 2,
                     spread: 80,
