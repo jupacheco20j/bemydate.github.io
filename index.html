@@ -10,6 +10,8 @@
       background: #ffe6f0;
       text-align: center;
       padding-top: 100px;
+      overflow: hidden;
+      height: 100vh;
     }
 
     h1 {
@@ -29,6 +31,7 @@
       border-radius: 10px;
       cursor: pointer;
       transition: 0.2s;
+      position: relative;
     }
 
     #yes {
@@ -39,6 +42,7 @@
     #no {
       background: #ff4d4d;
       color: white;
+      position: absolute;
     }
 
     #message {
@@ -79,12 +83,25 @@
     const message = document.getElementById("message");
     const yesButton = document.getElementById("yes");
 
-    noButton.addEventListener("click", () => {
+    function moveButton() {
+      const x = Math.random() * (window.innerWidth - 120);
+      const y = Math.random() * (window.innerHeight - 120);
+
+      noButton.style.left = x + "px";
+      noButton.style.top = y + "px";
+    }
+
+    noButton.addEventListener("mouseover", () => {
       message.textContent = messages[index];
       index = (index + 1) % messages.length;
+      moveButton();
+    });
 
-      // opcional: hacer el botón más "difícil"
-      noButton.style.transform = `scale(${1 + index * 0.05})`;
+    noButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      message.textContent = messages[index];
+      index = (index + 1) % messages.length;
+      moveButton();
     });
 
     yesButton.addEventListener("click", () => {
