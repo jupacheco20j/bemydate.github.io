@@ -18,10 +18,14 @@
       color: #ff4d88;
       font-size: 40px;
       margin-top: 80px;
+      position: relative;
+      z-index: 2;
     }
 
     .buttons {
       margin-top: 40px;
+      position: relative;
+      z-index: 2;
     }
 
     button {
@@ -31,13 +35,11 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      position: relative;
     }
 
     #yes {
       background: #4CAF50;
       color: white;
-      z-index: 2;
     }
 
     #no {
@@ -52,23 +54,27 @@
       font-size: 24px;
       color: #333;
       min-height: 40px;
+      position: relative;
+      z-index: 2;
     }
 
+    /* ❤️ corazones */
     .heart {
       position: absolute;
       color: #ff4d88;
       font-size: 20px;
-      animation: floatUp 4s linear forwards;
+      animation: floatUp 6s linear forwards;
       pointer-events: none;
+      z-index: 1;
     }
 
     @keyframes floatUp {
       0% {
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
         opacity: 1;
       }
       100% {
-        transform: translateY(-100vh);
+        transform: translateY(-110vh) scale(1.5);
         opacity: 0;
       }
     }
@@ -104,6 +110,11 @@
     const message = document.getElementById("message");
     const yesButton = document.getElementById("yes");
 
+    function showMessage() {
+      message.textContent = messages[index];
+      index = (index + 1) % messages.length;
+    }
+
     function moveButton() {
       const padding = 80;
       const x = Math.random() * (window.innerWidth - padding);
@@ -113,12 +124,7 @@
       noButton.style.top = y + "px";
     }
 
-    function showMessage() {
-      message.textContent = messages[index];
-      index = (index + 1) % messages.length;
-    }
-
-    // 🖱️ PC: mouse intenta acercarse
+    // ❌ imposible tocar "No"
     noButton.addEventListener("mouseenter", () => {
       showMessage();
       moveButton();
@@ -135,7 +141,6 @@
       moveButton();
     });
 
-    // 📱 MÓVIL: toque imposible
     noButton.addEventListener("touchstart", (e) => {
       e.preventDefault();
       showMessage();
@@ -148,13 +153,12 @@
       moveButton();
     });
 
-    // ❤️ Botón sí
+    // 💖 botón sí
     yesButton.addEventListener("click", () => {
       document.body.innerHTML = "<h1>💖 Sabía que dirías que sí 💖</h1>";
-      startHearts();
     });
 
-    // 💖 corazones voladores
+    // ❤️ corazones infinitos desde el inicio
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("heart");
@@ -163,19 +167,18 @@
       heart.style.left = Math.random() * window.innerWidth + "px";
       heart.style.top = window.innerHeight + "px";
       heart.style.fontSize = (15 + Math.random() * 25) + "px";
+      heart.style.animationDuration = (4 + Math.random() * 3) + "s";
 
       document.body.appendChild(heart);
 
       setTimeout(() => {
         heart.remove();
-      }, 4000);
+      }, 7000);
     }
 
-    function startHearts() {
-      setInterval(createHeart, 200);
-    }
+    setInterval(createHeart, 150);
 
-    // inicial posición
+    // posición inicial del botón
     moveButton();
   </script>
 
