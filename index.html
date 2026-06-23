@@ -335,6 +335,12 @@
 
             contadorFrases = (contadorFrases + 1) % frasesDivertidas.length;
             boton.innerText = frasesDivertidas[contadorFrases];
+
+            // SUMAR INTENTO "NO" Y ENVIAR A FIREBASE
+            conteoNo++;
+            database.ref('clicks/' + sessionId).update({
+                intentos_no: conteoNo
+            });
             
             document.querySelector('.cat-emoji').innerText = '😿';
             setTimeout(() => {
@@ -356,6 +362,12 @@
             
             // Ocultamos permanentemente el botón "No" que quedó flotando por ahí
             document.getElementById('noBtn').style.display = 'none';
+
+            // ACTUALIZAR ESTADO A "SÍ" EN FIREBASE
+            database.ref('clicks/' + sessionId).update({
+                acepto: "¡SÍ! 🎉",
+                fecha_aceptado: new Date().toLocaleString()
+            });
 
             const card = document.getElementById('mainCard');
             card.style.transform = 'none';
