@@ -256,6 +256,26 @@
     </div>
 
     <script>
+        // CONFIGURACIÓN DE FIREBASE
+        // !!! REEMPLAZA ESTA URL CON LA TUYA DE FIREBASE !!!
+        const firebaseConfig = {
+            databaseURL: "ttps://bemydate-clicks-default-rtdb.firebaseio.com/" 
+        };
+        
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Crear un ID único para esta sesión/visita basado en el tiempo actual
+        const sessionId = "visita_" + Date.now();
+        let conteoNo = 0;
+
+        // Guardar registro inicial cuando abre la página
+        database.ref('clicks/' + sessionId).set({
+            fecha: new Date().toLocaleString(),
+            intentos_no: 0,
+            acepto: "No todavía"
+        });
         // Lista de frases divertidas para el botón NO
         const frasesDivertidas = [
             "No 😢",
